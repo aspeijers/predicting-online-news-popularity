@@ -21,7 +21,9 @@ test.hex <- h2o.uploadFile(path = path2, destination_frame = "test.hex" )
 training.hex$popularity <- as.factor(training.hex$popularity)
 
 ### GBM
-training.gbm <- h2o.gbm(y=63, x=5:62, training_frame= training.hex, ntrees=20, max_depth=5, min_rows= 2, learn_rate=0.01, distribution="multinomial")
+training.gbm <- h2o.gbm(y=63, x=5:62, training_frame= training.hex, ntrees=2000, 
+                        max_depth=5, min_rows= 20, learn_rate=0.05, 
+                        distribution="multinomial", nbins=50)
 training.gbm@model$training_metrics
 
 prediction <- h2o.predict(training.gbm, newdata=test.hex)
@@ -30,5 +32,33 @@ head(pred)
 actual <- as.data.frame(test.hex)[,63]
 percent_correct <- sum(pred[,1] == actual) / length(actual)
 percent_correct
+
+
+
+## Grid search for model comparison
+ntrees_opt <- c(5,25,50,100)
+maxdepth_opt <- c(2,5,15,35)
+learnrate_opt <- c(0.001, 0.05, 0.1, 0.2)
+hyper_parameters <- list(ntrees=ntrees_opt, max_depth=maxdepth_opt, learn_rate=learnrate_opt)
+
+grid <- h2o.grid("gbm", hyper_params = hyper_parameters, y = 63, x = 5:62, 
+                 distribution="multinomial", training_frame= training.hex, 
+                 validation_frame=test.hex )
+
+grid
+
+grid_models <- lapply(grid@model_ids, function(model_id) {model = h2o.getModel(model_id)})
+for (i in 1:length(grid_models)) {
+    print(sprintf("auc: %f", h2o.auc(grid_models[[i]])))
+}
+
+precisions <- rep(0, length(grid_models))
+for (i in 1:length(grid_models)) {
+    precisions[i] <- h2o.confusionMatrix(grid_models[[i]])[6,6]
+}
+
+plot(precisions)
+max(precisions)
+
 
 h2o.shutdown()
