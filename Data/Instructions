@@ -1,0 +1,33 @@
+The instructions: 
+
+So I am uploading 3 files total:
+1) train_result.csv
+2) test_result.csv
+3) labels.csv
+
+The train_result.csv files has 21000 rows and 36 columns
+It is a modification of our dataset training70.csv
+
+The test_result.csv file has 9000 rows and 35 columns 
+It has the same modifications done to training70 but it is the modified test30.csv
+
+Labels.csv consists of the labels from the test30 set, I separated the test_result.csv and labels.csv 
+for my convenience. 
+
+The code H20-new.R has the part till the percentage calculation modified such that you can
+just execute it and it will run smoothly, only the fine tuning of the parameters needs to be 
+done. 
+
+The models I have executed are as follows:
+The values inside the brackets are respectively (ntrees, max_depth, min_rows, learn_rate) 
+The accuracy is the value listed outside.
+(150,3,10,0.01) -> 0.4933
+(1000,7,5,0.001) -> 0.51277
+(100,7,5,0.01) -> 0.51277
+(400,6,10,0.02) -> 0.51833 
+(500, 4, 10, 0.01) -> 0.52
+(200, 5, 10, 0.01) -> 0.52088
+(400, 5, 10, 0.01) -> 0.52255
+(300, 5, 10, 0.01) -> 0.5235
+(250, 5, 10, 0.01) -> 0.5242 
+
