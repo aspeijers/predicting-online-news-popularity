@@ -23,14 +23,13 @@ labels.hex <- h2o.uploadFile(path = path3, destination_frame = "labels.hex")
 training.hex$popularity <- as.factor(training.hex$popularity)
 
 ### GBM
-training.gbm <- h2o.gbm(y=36, x=1:35, training_frame= training.hex, ntrees=150, 
-                        max_depth=3, min_rows= 10, learn_rate=0.001, 
+training.gbm <- h2o.gbm(y=36, x=2:35, training_frame= training.hex, ntrees=285, 
+                        max_depth=6, min_rows= 10, learn_rate=0.01, 
                         distribution="multinomial", nbins=1024)
 training.gbm@model$training_metrics
 
 prediction <- h2o.predict(training.gbm, newdata=test.hex)
 pred <- as.data.frame(prediction)
-head(pred)
 actual <- as.data.frame(labels.hex)[,2]
 percent_correct <- sum(pred[,1] == actual) / length(actual)
 percent_correct
