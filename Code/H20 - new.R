@@ -1,4 +1,4 @@
-setwd("~/WorkSpace/predicting-online-news-popularity/Data")
+setwd("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data")
 
 # The following two commands remove any previously installed H2O packages for R.
 if ("package:h2o" %in% search()) { detach("package:h2o", unload=TRUE) }
@@ -9,8 +9,8 @@ install.packages("h2o", repos=(c("http://s3.amazonaws.com/h2o-release/h2o/master
 library(h2o)
 h2o.init(nthreads = -1)
 
-path1 <- "train_result.csv"
-path2 <- "test_result.csv"
+path1 <- "train_result2.csv"
+path2 <- "test_result2.csv"
 path3 <- "labels.csv"
 training.hex <- h2o.uploadFile(path = path1, destination_frame = "training.hex" )
 test.hex <- h2o.uploadFile(path = path2, destination_frame = "test.hex" )
@@ -23,8 +23,8 @@ labels.hex <- h2o.uploadFile(path = path3, destination_frame = "labels.hex")
 training.hex$popularity <- as.factor(training.hex$popularity)
 
 ### GBM
-training.gbm <- h2o.gbm(y=36, x=2:35, training_frame= training.hex, ntrees=285, 
-                        max_depth=6, min_rows= 10, learn_rate=0.01, 
+training.gbm <- h2o.gbm(y=32, x=2:31, training_frame= training.hex, ntrees=285, 
+                        max_depth=6, min_rows= 20, learn_rate=0.01, 
                         distribution="multinomial", nbins=1024)
 training.gbm@model$training_metrics
 
