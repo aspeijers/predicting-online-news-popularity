@@ -12,6 +12,8 @@ hamclass(train, test, save.csv = FALSE, seed = 12345)
 \item{test}{A data frame or a matrix where rows are observations and columns are features.}
 
 \item{save.csv}{A TRUE or FALSE variable defining whether a .csv file with the id and predicted labels is to be saved or not. File will be saved to current working directory.}
+
+\item{seed}{A seed to use to enable reproducibility of output.}
 }
 \value{
 A list with the following elements: data frame with id and predicted popularity class, out of bag error. Note - we can extend this to list the optimal params chosen in the grid search.
