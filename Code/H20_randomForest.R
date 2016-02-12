@@ -56,10 +56,10 @@ percent_correct <- mean(pred[,1] == actual)
 percent_correct
 
 # submission
-path4 <- "news_popularity_test.csv"
+path4 <- "test_accuracyfn.csv"
 realTest.hex <- h2o.uploadFile(path =path4, destination_frame = "realTest.hex", sep=",")
-submission <- data.frame( id= realTest.hex$id )
-submission$popularity <- as.data.frame( h2o.predict(RF4, newdata=testData[,2:51]) )[,1]
+submission <- data.frame( id= as.data.frame(realTest.hex$id) )
+submission$popularity <- as.data.frame( h2o.predict(RF4, newdata=realTest.hex[,3:52]) )[,1]
 write.csv(submission, file="../Submissions/submission_RFH2o1.csv", row.names=FALSE)
 
 #variable importance
