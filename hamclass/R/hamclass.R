@@ -46,7 +46,7 @@ hamclass <- function(train, test, save.csv=FALSE, seed=12345) {
     assert_that( is.data.frame(test) | is.matrix(test) )
     assert_that( ncol(test) == (ncol(train)-1) )
     assert_that ( save.csv %in% c("TRUE", "FALSE") )
-    is_count( seed )
+    is.count( seed )
     
     ## initialise H2o
     h2o.init( nthreads = -1 )

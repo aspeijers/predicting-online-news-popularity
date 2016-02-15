@@ -1,7 +1,8 @@
 Package: hamclass
+Type: Package
 Version: 1.0
 Date: 2016-02-12
-Title: Classifies observations using the h2o implementation of random forest.
+Title: Classification using the h2o implementation of random forest.
 Author: Harihara Subramanyam Sreenivasan and Max Elias van Esso and Anneke Speijers
 Maintainer: Anneke Speijers <anneke.speijers@barcelonagse.eu>
 Description: Library which takes training and testing data and returns predicted values for the test data which are calculated using the h2o implementation of random forest.
