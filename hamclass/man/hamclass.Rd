@@ -4,12 +4,12 @@
 \alias{hamclass}
 \title{Random Forest Classifier}
 \usage{
-hamclass(train, test, save.csv = FALSE, seed = 12345)
+hamclass(train, predict, save.csv = FALSE, seed = 12345)
 }
 \arguments{
 \item{train}{A data frame or a matrix where rows are observations and columns are features and the label. The label is the final column.}
 
-\item{test}{A data frame or a matrix where rows are observations and columns are features.}
+\item{predict}{A data frame or a matrix where rows are observations and columns are features.}
 
 \item{save.csv}{A TRUE or FALSE variable defining whether a .csv file with the id and predicted labels is to be saved or not. File will be saved to current working directory.}
 
@@ -24,9 +24,12 @@ Classify the input with a random forest classifier.
 \examples{
 # create artificial dataset
 inputsTrain   <- cbind( matrix(rnorm(200), ncol=2), sample( c(1,2,3,4,5), 100, replace=TRUE) )
-inputsTest  <- matrix(rnorm(200), ncol=2)
+inputsPredict  <- matrix(rnorm(200), ncol=2)
 classesTrain <- c(rep(0, 50), rep(1, 50))
-# get the hamclass predictions for the test set and save them in a .csv file in the current working directory
-hamclass(inputsTrain, inputsTest, save.csv=TRUE)
+# get the hamclass predictions for the predict set and save them in a .csv file in the current working directory
+classes  <- hamclass(inputsTrain, inputsPredict, save.csv=TRUE)
+classes$prediction
+# get the hamclass out of bag error for the training set
+classes$oob_error
 }
 

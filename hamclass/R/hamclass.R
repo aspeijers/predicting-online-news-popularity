@@ -6,7 +6,7 @@
 #' Classify the input with a random forest classifier.
 #'
 #' @param train A data frame or a matrix where rows are observations and columns are features and the label. The label is the final column.
-#' @param test A data frame or a matrix where rows are observations and columns are features. 
+#' @param predict A data frame or a matrix where rows are observations and columns are features. 
 #' @param save.csv A TRUE or FALSE variable defining whether a .csv file with the id and predicted labels is to be saved or not. File will be saved to current working directory. 
 #' @param seed A seed to use to enable reproducibility of output. 
 #' @return A list with the following elements: data frame with id and predicted popularity class, out of bag error.  
@@ -16,15 +16,15 @@
 #' @examples
 #' # create artificial dataset
 #' inputsTrain   <- cbind( matrix(rnorm(200), ncol=2), sample( c(1,2,3,4,5), 100, replace=TRUE) )
-#' inputsTest  <- matrix(rnorm(200), ncol=2)
+#' inputsPredict  <- matrix(rnorm(200), ncol=2)
 #' classesTrain <- c(rep(0, 50), rep(1, 50))
-#' # get the hamclass predictions for the test set and save them in a .csv file in the current working directory
-#' classes  <- hamclass(inputsTrain, inputsTest, save.csv=TRUE)
+#' # get the hamclass predictions for the predict set and save them in a .csv file in the current working directory
+#' classes  <- hamclass(inputsTrain, inputsPredict, save.csv=TRUE)
 #' classes$prediction
 #' # get the hamclass out of bag error for the training set
 #' classes$oob_error
 
-hamclass <- function(train, test, save.csv=FALSE, seed=12345) {
+hamclass <- function(train, predict, save.csv=FALSE, seed=12345) {
     
     ## install dependent packages
     if (!require("assertthat")) install.packages("assertthat")
@@ -44,10 +44,10 @@ hamclass <- function(train, test, save.csv=FALSE, seed=12345) {
     library(h2o)
     
     ## check inputs
-    not_empty(train); not_empty(test)
+    not_empty(train); not_empty(predict)
     assert_that( is.data.frame(train) | is.matrix(train) )
-    assert_that( is.data.frame(test) | is.matrix(test) )
-    assert_that( ncol(test) == (ncol(train)-1) )
+    assert_that( is.data.frame(predict) | is.matrix(predict) )
+    assert_that( ncol(predict) == (ncol(train)-1) )
     assert_that ( save.csv %in% c("TRUE", "FALSE") )
     is.count( seed )
     
@@ -56,13 +56,13 @@ hamclass <- function(train, test, save.csv=FALSE, seed=12345) {
     
     ## convert inputs to h2o frame object
     train       <- as.data.frame( train )
-    test        <- as.data.frame( test )
+    predict       <- as.data.frame( predict )
     
     train.hex   <- as.h2o( train, destination_frame="train.hex" )
-    test.hex    <- as.h2o( test, destination_frame="test.hex" )
+    predict.hex    <- as.h2o( predict, destination_frame="predict.hex" )
     
     ## convert label to factor
-    k               <- dim( test.hex )[2]
+    k               <- dim( predict.hex )[2]
     train.hex[,k+1] <- as.factor( train.hex[,k+1] ) 
     
     ## run RF - add grid search
@@ -73,8 +73,8 @@ hamclass <- function(train, test, save.csv=FALSE, seed=12345) {
     oob_error   <- RF@model$training_metrics@metrics$cm$table[ nclasses + 1, nclasses + 1]
     
     ## predict
-    results                 <- h2o.predict( RF, newdata=test.hex[,2:k] )
-    prediction              <- data.frame( id=test[,1] )
+    results                 <- h2o.predict( RF, newdata=predict.hex[,2:k] )
+    prediction              <- data.frame( id=predict[,1] )
     prediction$popularity   <- as.data.frame( results )[,1]
     
     ## save csv to working directory
