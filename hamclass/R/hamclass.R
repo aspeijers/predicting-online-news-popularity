@@ -60,13 +60,14 @@ hamclass <- function(train, test, save.csv=FALSE, seed=12345) {
     
     ## convert label to factor
     k               <- dim( test.hex )[2]
-    train.hex[,k+1]  <- as.factor( train.hex[,k+1] ) 
+    train.hex[,k+1] <- as.factor( train.hex[,k+1] ) 
     
     ## run RF - add grid search
     RF          <- h2o.randomForest( y = (k+1), x = 2:(k), training_frame = train.hex, ntrees = 1000, max_depth = 100, mtries = 10 )
     
     ## out of bag error
-    oob_error   <- RF@model$training_metrics@metrics$cm$table[6,6]
+    nclasses    <- length( unique(train[,k+1]) )
+    oob_error   <- RF@model$training_metrics@metrics$cm$table[ nclasses + 1, nclasses + 1]
     
     ## predict
     results                 <- h2o.predict( RF, newdata=test.hex[,2:k] )
