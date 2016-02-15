@@ -26,7 +26,7 @@ Classify the input with a random forest classifier.
 inputsTrain   <- cbind( matrix(rnorm(200), ncol=2), sample( c(1,2,3,4,5), 100, replace=TRUE) )
 inputsTest  <- matrix(rnorm(200), ncol=2)
 classesTrain <- c(rep(0, 50), rep(1, 50))
-# get the hamclass predictions for the test set and save them in a .csv file to current working directory
+# get the hamclass predictions for the test set and save them in a .csv file in the current working directory
 hamclass(inputsTrain, inputsTest, save.csv=TRUE)
 }
 
