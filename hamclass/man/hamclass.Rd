@@ -16,7 +16,7 @@ hamclass(train, test, save.csv = FALSE, seed = 12345)
 \item{seed}{A seed to use to enable reproducibility of output.}
 }
 \value{
-A list with the following elements: data frame with id and predicted popularity class, out of bag error. Note - we can extend this to list the optimal params chosen in the grid search.
+A list with the following elements: data frame with id and predicted popularity class, out of bag error.
 }
 \description{
 Classify the input with a random forest classifier.

@@ -9,7 +9,7 @@
 #' @param test A data frame or a matrix where rows are observations and columns are features. 
 #' @param save.csv A TRUE or FALSE variable defining whether a .csv file with the id and predicted labels is to be saved or not. File will be saved to current working directory. 
 #' @param seed A seed to use to enable reproducibility of output. 
-#' @return A list with the following elements: data frame with id and predicted popularity class, out of bag error. Note - we can extend this to list the optimal params chosen in the grid search. 
+#' @return A list with the following elements: data frame with id and predicted popularity class, out of bag error.  
 #' @export
 #' @import assertthat 
 #' @import h2o
@@ -60,7 +60,7 @@ hamclass <- function(train, test, save.csv=FALSE, seed=12345) {
     
     ## convert label to factor
     k               <- dim( test.hex )[2]
-    train.hex[k+1]  <- as.factor( train.hex[k+1] ) 
+    train.hex[,k+1]  <- as.factor( train.hex[,k+1] ) 
     
     ## run RF - add grid search
     RF          <- h2o.randomForest( y = (k+1), x = 2:(k), training_frame = train.hex, ntrees = 1000, max_depth = 100, mtries = 10 )
