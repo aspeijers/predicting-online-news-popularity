@@ -19,7 +19,10 @@
 #' inputsTest  <- matrix(rnorm(200), ncol=2)
 #' classesTrain <- c(rep(0, 50), rep(1, 50))
 #' # get the hamclass predictions for the test set and save them in a .csv file in the current working directory
-#' hamclass(inputsTrain, inputsTest, save.csv=TRUE)
+#' classes  <- hamclass(inputsTrain, inputsTest, save.csv=TRUE)
+#' classes$prediction
+#' # get the hamclass out of bag error for the training set
+#' classes$oob_error
 
 hamclass <- function(train, test, save.csv=FALSE, seed=12345) {
     
