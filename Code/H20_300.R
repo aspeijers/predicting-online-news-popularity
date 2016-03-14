@@ -52,11 +52,11 @@ Complete49_gbm_tr <- as.h2o(xgboost_train[,-1], destination_frame = "Complete49_
 Complete49_gbm_te <- as.h2o(xgboost_test[,-1], destination_frame = "Complete49_gbm_te")
 
 # Ensuring that the popularity is a factor
-Complete49_gbm_tr[,301] <- as.factor(Complete49_gbm_tr[,301])
-Complete49_gbm_te[,301] <- as.factor(Complete49_gbm_te[,301])
+Complete49_gbm_tr[,1] <- as.factor(Complete49_gbm_tr[,1])
+Complete49_gbm_te[,1] <- as.factor(Complete49_gbm_te[,1])
 
 ### GBM
-training49.gbm <- h2o.gbm(y=301, x=1:300, training_frame= Complete_gbm_tr, ntrees=285,
+training49.gbm <- h2o.gbm(y=1, x=2:50, training_frame= Complete49_gbm_tr, ntrees=285,
                         max_depth=6, min_rows= 20, learn_rate=0.01,
                         distribution="multinomial", nbins=1024)
 
@@ -65,7 +65,7 @@ prediction49 <- h2o.predict(training49.gbm, newdata=Complete49_gbm_te)
 pred49 <- as.data.frame(prediction49)
 
 # Checking the accuracy
-percent_correct <- (sum(pred49[,1] == xgboost_test[,302])) / nrow(xgboost_test)
+percent_correct <- (sum(pred49[,1] == xgboost_test[,2])) / nrow(xgboost_test)
 percent_correct
 
 
