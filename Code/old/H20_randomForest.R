@@ -10,9 +10,9 @@ library(h2o)
 h2o.init(nthreads = -1)
 
 # import data
-path1 <- "finalstretch_train.csv"
-path2 <- "finalstretch_test.csv"
-path3 <- "labels.csv"
+path1 <- "training_300.csv"
+path2 <- "test_300.csv"
+#path3 <- "labels.csv"
 training.hex <- h2o.uploadFile(path = path1, destination_frame = "training.hex", sep=",")
 test.hex <- h2o.uploadFile(path =path2, destination_frame = "test.hex", sep=",")
 labels.hex <- h2o.uploadFile(path = path3, destination_frame = "labels.hex")

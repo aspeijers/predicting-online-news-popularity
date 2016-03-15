@@ -24,7 +24,7 @@ X_train_cont    <- X_train[,(varType=="numeric")]
 X_test_cont     <- X_test[ ,(varType=="numeric")]
 
 # define a vector consisting of the names of the continuous variables
-features_cont   <- names(train_cont)
+features_cont   <- names(X_train_cont)
 
 p_cont  <- ncol(X_test_cont)
 

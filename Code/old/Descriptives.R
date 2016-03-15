@@ -185,3 +185,13 @@ for ( i in 1:(length(combined)-1) ) {
 
 write.csv(combined_updated1, file = "../data/XX_anov_train4.csv")
 write.csv(X_test_updated1, file = "../data/XX_anov_test4.csv")
+
+# which variables relate to these interaction terms from XX_anov_train2
+interactWanted <- c("interact", "interact.3", "interact.4", "interact.5", 
+                    "interact.7", "interact.8", "interact.11", "interact.12",
+                    "interact.16", "interact.17", "interact.18", "interact.20",
+                    "interact.26", "interact.27", "interact.29")
+logicalVec <- (names(combined_updated2)[1:30] %in% interactWanted)
+var1 <- varDiff1[logicalVec]
+var2 <- varDiff2[logicalVec]
+
