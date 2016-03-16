@@ -56,9 +56,9 @@ Complete49_gbm_tr[,1] <- as.factor(Complete49_gbm_tr[,1])
 Complete49_gbm_te[,1] <- as.factor(Complete49_gbm_te[,1])
 
 ### GBM
-training49.gbm <- h2o.gbm(y=1, x=2:50, training_frame= Complete49_gbm_tr, ntrees=285,
-                        max_depth=6, min_rows= 20, learn_rate=0.01,
-                        distribution="multinomial", nbins=1024)
+training49.gbm <- h2o.gbm(y=1, x=2:50, training_frame = Complete49_gbm_tr, ntrees=626,
+                        max_depth=6, min_rows= 14, learn_rate=0.01,
+                        distribution="multinomial")
 
 # Storing the predictions
 prediction49 <- h2o.predict(training49.gbm, newdata=Complete49_gbm_te)
@@ -75,3 +75,154 @@ final_selection <- h2o.varimp(training49.gbm)
 # Plotting the variable importance
 plot(final_selection[,2])
 sum(final_selection[,2] > mean(final_selection[,2]))
+
+
+################################################
+# 51 features with GBM optimum parameters ######
+################################################
+
+xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/final_ftrs_train.csv", header = TRUE)
+xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/final_ftrs_test.csv", header = TRUE)
+
+
+# Converting the dataframe to h2o training frames
+Complete51_gbm_tr <- as.h2o(xgboost_train[,-1], destination_frame = "Complete51_gbm_tr")
+Complete51_gbm_te <- as.h2o(xgboost_test[,-1], destination_frame = "Complete51_gbm_te")
+
+# Ensuring that the popularity is a factor
+Complete51_gbm_tr[,51] <- as.factor(Complete51_gbm_tr[,51])
+Complete51_gbm_te[,51] <- as.factor(Complete51_gbm_te[,51])
+
+### GBM
+training51.gbm <- h2o.gbm(y=51, x=1:50, training_frame = Complete51_gbm_tr, ntrees=350,
+                          max_depth=5, min_rows= 15, learn_rate=0.001,
+                          distribution="multinomial")
+
+# Storing the predictions
+prediction51 <- h2o.predict(training51.gbm, newdata=Complete51_gbm_te)
+pred51 <- as.data.frame(prediction51)
+
+# Checking the accuracy
+percent_correct <- (sum(pred51[,1] == xgboost_test[,52])) / nrow(xgboost_test)
+percent_correct
+
+
+# Storing the variable importance
+final_selection <- h2o.varimp(training51.gbm)
+
+# Plotting the variable importance
+plot(final_selection[,2])
+sum(final_selection[,2] > mean(final_selection[,2]))
+
+
+###############################################################
+# 49 features with GBM optimum parameters for submission ######
+###############################################################
+
+xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/train49.csv", header = TRUE)
+xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/test49.csv", header = TRUE)
+test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/news_popularity_test.csv", header = TRUE)
+
+
+# Converting the dataframe to h2o training frames
+Complete49_gbm_tr <- as.h2o(xgboost_train[,-1], destination_frame = "Complete49_gbm_tr")
+Complete49_gbm_te <- as.h2o(xgboost_test[,-1], destination_frame = "Complete49_gbm_te")
+
+# Ensuring that the popularity is a factor
+Complete49_gbm_tr[,50] <- as.factor(Complete49_gbm_tr[,50])
+
+
+### GBM
+training49.gbm <- h2o.gbm(y=50, x=1:49, training_frame = Complete49_gbm_tr, ntrees=626,
+                          max_depth=6, min_rows= 14, learn_rate=0.01,
+                          distribution="multinomial")
+
+# Storing the predictions
+prediction49 <- h2o.predict(training49.gbm, newdata=Complete49_gbm_te)
+pred49 <- as.data.frame(prediction49)
+
+pred49 <- cbind(test[,1], pred49$predict)
+
+colnames(pred49) <- c("id", "popularity")
+
+write.csv(pred49, "submission49.csv")
+
+###############################################################
+# 50 features with GBM optimum parameters for submission ######
+###############################################################
+
+xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/train50.csv", header = TRUE)
+xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/test50.csv", header = TRUE)
+test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/news_popularity_test.csv", header = TRUE)
+
+
+# Converting the dataframe to h2o training frames
+Complete50_gbm_tr <- as.h2o(xgboost_train[,-1], destination_frame = "Complete50_gbm_tr")
+Complete50_gbm_te <- as.h2o(xgboost_test[,-1], destination_frame = "Complete50_gbm_te")
+
+# Ensuring that the popularity is a factor
+Complete50_gbm_tr[,51] <- as.factor(Complete50_gbm_tr[,51])
+
+
+### GBM
+training50.gbm <- h2o.gbm(y=51, x=1:50, training_frame = Complete50_gbm_tr, ntrees=350,
+                          max_depth=5, min_rows= 14, learn_rate=0.025,
+                          distribution="multinomial")
+
+# Storing the predictions
+prediction50 <- h2o.predict(training50.gbm, newdata=Complete50_gbm_te)
+pred50 <- as.data.frame(prediction50)
+
+pred50 <- cbind(test[,1], pred50$predict)
+
+colnames(pred50) <- c("id", "popularity")
+
+write.csv(pred50, "submission50tunedparams.csv")
+
+
+
+
+
+###########################################################
+######## RANDOM FOREST RANDOM FOREST RANDOM FOREST ########
+###########################################################
+
+
+
+
+################################################
+# 51 features with RF optimum parameters ######
+################################################
+
+rf_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/final_ftrs_train.csv", header = TRUE)
+rf_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/final_ftrs_test.csv", header = TRUE)
+
+
+# Converting the dataframe to h2o training frames
+Complete51_rf_tr <- as.h2o(rf_train[,-1], destination_frame = "Complete51_rf_tr")
+Complete51_rf_te <- as.h2o(rf_test[,-1], destination_frame = "Complete51_rf_te")
+
+# Ensuring that the popularity is a factor
+Complete51_rf_tr[,51] <- as.factor(Complete51_rf_tr[,51])
+Complete51_rf_te[,51] <- as.factor(Complete51_rf_te[,51])
+
+
+# run rf algorithm
+RF2 <- h2o.randomForest(y=51, x=1:50, training_frame=Complete51_rf_tr, 
+                        ntrees=500, 
+                        max_depth=5, 
+                        seed=22664, 
+                        nfolds=5)
+
+# performance
+performance <- h2o.performance(RF2, data=Complete51_rf_tr, valid=TRUE)
+performance
+
+
+# predictions and accuracy
+prediction <- h2o.predict(RF2, newdata=Complete51_rf_te)
+pred <- as.data.frame(prediction)
+
+actual <- as.matrix(Complete51_rf_te)[,51]
+percent_correct <- mean(pred[,1] == actual)
+percent_correct

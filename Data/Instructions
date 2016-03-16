@@ -1,38 +1,13 @@
-The instructions: 
+The following document has the accuracy values for all the models we trained and tested along the process. For each group of tests (where we just tuned one parameter at a time) we give ** to the best result and for each different matrix of features we get *** to the best model in terms of accuracy over all the different tested combinations.
 
-So I am uploading 3 files total:
-1) train_result.csv
-2) test_result.csv
-3) labels.csv
+The models we have executed are as follows:
 
-The train_result.csv files has 21000 rows and 36 columns
-It is a modification of our dataset training70.csv
+GBM:
 
-The test_result.csv file has 9000 rows and 35 columns 
-It has the same modifications done to training70 but it is the modified test30.csv
-
-Labels.csv consists of the labels from the test30 set, I separated the test_result.csv and labels.csv 
-for my convenience. 
-
-The code H20-new.R has the part till the percentage calculation modified such that you can
-just execute it and it will run smoothly, only the fine tuning of the parameters needs to be 
-done. 
-
-The models I have executed are as follows:
 The values inside the brackets are respectively (ntrees, max_depth, min_rows, learn_rate) 
-The accuracy is the value listed outside. (not correct cause of the selection of the x on the training matrix)
-(150,3,10,0.01) -> 0.4933
-(1000,7,5,0.001) -> 0.51277
-(100,7,5,0.01) -> 0.51277
-(400,6,10,0.02) -> 0.51833 
-(500, 4, 10, 0.01) -> 0.52
-(200, 5, 10, 0.01) -> 0.52088
-(400, 5, 10, 0.01) -> 0.52255
-(300, 5, 10, 0.01) -> 0.5235
-(250, 5, 10, 0.01) -> 0.5242 
 
 
-After we selected the x from 2:35
+Manually selected features matrix:
 
 (500, 5, 10, 0.01) -> 0.5221
 (230, 5, 10, 0.01) -> 0.5207
@@ -64,9 +39,9 @@ After we selected the x from 2:35
 (290, 6, 20, 0.01) -> 0.5257
 (295, 6, 20, 0.01) -> 0.5253
 
-Results of xgboost49 parameter tunning
 
-ntrees, maxdepth, minrow, learn_rate and nfold=5
+
+Matrix of 49 features:
 
 (500, 5, 10, 0.01) -> 0.5276
 (230, 5, 10, 0.01) -> 0.5242
@@ -76,8 +51,6 @@ ntrees, maxdepth, minrow, learn_rate and nfold=5
 (550, 5, 10, 0.01) -> 0.5276
 (625, 5, 10, 0.01) -> 0.5282**
 (675, 5, 10, 0.01) -> 0.5277
-
-(1500, 8, 0.005) -> 0.5223
 
 (625, 4, 10, 0.01) -> 0.5232
 (625, 6, 10, 0.01) -> 0.5286**
@@ -117,9 +90,8 @@ ntrees, maxdepth, minrow, learn_rate and nfold=5
 (626, 6, 14, 0.007) -> 0.5252
 
 
-Results of xgboost50 parameter tunning
 
-ntrees, maxdepth, minrow, learn_rate and nfold=5
+Matrix of 50 features:
 
 (500, 5, 10, 0.01) -> 0.5253
 (400, 5, 10, 0.01) -> 0.5253
@@ -148,3 +120,19 @@ ntrees, maxdepth, minrow, learn_rate and nfold=5
 (350, 5, 14, 0.025) -> 0.5283***
 (350, 5, 14, 0.005) -> 0.5183
 (350, 5, 14, 0.001) -> 0.5063
+
+
+
+Random Forest:
+
+Tunning parameters for the RF 50 features matrix
+
+ntrees, max_depth, nfolds, mtries, balance_class=FALSE
+
+Matrix of 50 features:
+
+(500, 5, 5) -> 0.5038
+(500, 6, 5, 15) -> 0.5093
+(500, 5, 5, 20) -> 0.5101
+(500, 5, 5, 25) -> 0.5
+(500, 5, 5, 30) -> 0.5083
