@@ -184,40 +184,71 @@ write.csv(pred50, "submission50tunedparams.csv")
 # 51 features with GBM optimum parameters ######
 ################################################
 
-xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/final_ftrs_train.csv", header = TRUE)
-xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/final_ftrs_test.csv", header = TRUE)
+xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/training70.csv", header = TRUE)
+xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/test30.csv", header = TRUE)
 
 
 # Converting the dataframe to h2o training frames
-Complete51_gbm_tr <- as.h2o(xgboost_train[,-1], destination_frame = "Complete51_gbm_tr")
-Complete51_gbm_te <- as.h2o(xgboost_test[,-1], destination_frame = "Complete51_gbm_te")
+Complete60_gbm_tr <- as.h2o(xgboost_train[,c(-1,-2,-3)], destination_frame = "Complete60_gbm_tr")
+Complete60_gbm_te <- as.h2o(xgboost_test[,c(-1,-2,-3)], destination_frame = "Complete60_gbm_te")
 
 # Ensuring that the popularity is a factor
-Complete51_gbm_tr[,51] <- as.factor(Complete51_gbm_tr[,51])
-Complete51_gbm_te[,51] <- as.factor(Complete51_gbm_te[,51])
+Complete60_gbm_tr[,60] <- as.factor(Complete60_gbm_tr[,60])
+Complete60_gbm_te[,60] <- as.factor(Complete60_gbm_te[,60])
 
 ### GBM
-training51.gbm <- h2o.gbm(y=51, x=1:50, training_frame = Complete51_gbm_tr, ntrees=350,
-                          max_depth=5, min_rows= 15, learn_rate=0.001,
+training60.gbm <- h2o.gbm(y=60, x=1:59, training_frame = Complete60_gbm_tr, ntrees=675,
+                          max_depth=7, min_rows= 12, learn_rate=0.02,
                           distribution="multinomial")
 
 # Storing the predictions
-prediction51 <- h2o.predict(training51.gbm, newdata=Complete51_gbm_te)
-pred51 <- as.data.frame(prediction51)
+prediction60 <- h2o.predict(training60.gbm, newdata=Complete60_gbm_te)
+pred60 <- as.data.frame(prediction60)
 
 # Checking the accuracy
-percent_correct <- (sum(pred51[,1] == xgboost_test[,52])) / nrow(xgboost_test)
+percent_correct <- (sum(pred60[,1] == xgboost_test[,63])) / nrow(xgboost_test)
 percent_correct
 
 
 # Storing the variable importance
-final_selection <- h2o.varimp(training51.gbm)
+final_selection <- h2o.varimp(training60.gbm)
 
 # Plotting the variable importance
 plot(final_selection[,2])
 sum(final_selection[,2] > mean(final_selection[,2]))
 
 
+###############################################################
+# Original features with GBM optimum parameters for submission ######
+###############################################################
+
+xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/news_popularity_training.csv", header = TRUE)
+xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/news_popularity_test.csv", header = TRUE)
+test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/news_popularity_test.csv", header = TRUE)
+
+
+# Converting the dataframe to h2o training frames
+Complete60_gbm_tr <- as.h2o(xgboost_train[,c(-1,-2)], destination_frame = "Complete60_gbm_tr")
+Complete60_gbm_te <- as.h2o(xgboost_test[,c(-1,-2)], destination_frame = "Complete60_gbm_te")
+
+# Ensuring that the popularity is a factor
+Complete60_gbm_tr[,60] <- as.factor(Complete60_gbm_tr[,60])
+
+
+### GBM
+training60.gbm <- h2o.gbm(y=60, x=1:59, training_frame = Complete60_gbm_tr, ntrees=707,
+                          max_depth=5, min_rows= 10, learn_rate=0.015,
+                          distribution="multinomial")
+
+# Storing the predictions
+prediction60 <- h2o.predict(training60.gbm, newdata=Complete60_gbm_te)
+pred60 <- as.data.frame(prediction60)
+
+pred60 <- cbind(test[,1], pred60$predict)
+
+colnames(pred60) <- c("id", "popularity")
+
+write.csv(pred60, "submissionoriginaltunedparams.csv")
 
 
 
