@@ -180,14 +180,50 @@ colnames(pred50) <- c("id", "popularity")
 write.csv(pred50, "submission50tunedparams.csv")
 
 
+################################################
+# 51 features with GBM optimum parameters ######
+################################################
+
+xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/final_ftrs_train.csv", header = TRUE)
+xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/final_ftrs_test.csv", header = TRUE)
+
+
+# Converting the dataframe to h2o training frames
+Complete51_gbm_tr <- as.h2o(xgboost_train[,-1], destination_frame = "Complete51_gbm_tr")
+Complete51_gbm_te <- as.h2o(xgboost_test[,-1], destination_frame = "Complete51_gbm_te")
+
+# Ensuring that the popularity is a factor
+Complete51_gbm_tr[,51] <- as.factor(Complete51_gbm_tr[,51])
+Complete51_gbm_te[,51] <- as.factor(Complete51_gbm_te[,51])
+
+### GBM
+training51.gbm <- h2o.gbm(y=51, x=1:50, training_frame = Complete51_gbm_tr, ntrees=350,
+                          max_depth=5, min_rows= 15, learn_rate=0.001,
+                          distribution="multinomial")
+
+# Storing the predictions
+prediction51 <- h2o.predict(training51.gbm, newdata=Complete51_gbm_te)
+pred51 <- as.data.frame(prediction51)
+
+# Checking the accuracy
+percent_correct <- (sum(pred51[,1] == xgboost_test[,52])) / nrow(xgboost_test)
+percent_correct
+
+
+# Storing the variable importance
+final_selection <- h2o.varimp(training51.gbm)
+
+# Plotting the variable importance
+plot(final_selection[,2])
+sum(final_selection[,2] > mean(final_selection[,2]))
+
+
 
 
 
 ###########################################################
 ######## RANDOM FOREST RANDOM FOREST RANDOM FOREST ########
 ###########################################################
-
-
 
 
 ################################################
@@ -209,8 +245,9 @@ Complete51_rf_te[,51] <- as.factor(Complete51_rf_te[,51])
 
 # run rf algorithm
 RF2 <- h2o.randomForest(y=51, x=1:50, training_frame=Complete51_rf_tr, 
-                        ntrees=500, 
-                        max_depth=5, 
+                        ntrees= 1500, 
+                        max_depth=5,
+                        mtries = 20,
                         seed=22664, 
                         nfolds=5)
 
