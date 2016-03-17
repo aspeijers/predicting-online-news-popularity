@@ -10,7 +10,7 @@
 #' @param predict A data frame or a matrix where rows are observations and columns are features. 
 #' @param save.csv A TRUE or FALSE variable defining whether a .csv file with the id and predicted labels is to be saved or not. File will be saved to current working directory. 
 #' @param seed A seed to use to enable reproducibility of output. 
-#' @return A list with the following elements: data frame with id and predicted popularity class, out of bag error.  
+#' @return A list with the following elements: data frame with id and predicted popularity class.  
 #' @export
 #' @import assertthat 
 #' @import h2o
@@ -23,9 +23,8 @@
 #' classes  <- hamclass(inputsTrain, inputsPredict, save.csv=TRUE)
 #' classes$prediction
 #' # get the hamclass out of bag error for the training set
-#' classes$oob_error
 
-hamclass <- function(train, predict, save.csv=FALSE, seed=12345) {
+hamclass <- function(train, predict, save.csv=FALSE) {
   
   ## install dependent packages
   if (!require("assertthat")) install.packages("assertthat")
@@ -50,7 +49,6 @@ hamclass <- function(train, predict, save.csv=FALSE, seed=12345) {
   assert_that( is.data.frame(predict) | is.matrix(predict) )
   assert_that( ncol(predict) == (ncol(train)-1) )
   assert_that ( save.csv %in% c("TRUE", "FALSE") )
-  is.count( seed )
   
   ## initialise H2o
   h2o.init( nthreads = -1 )
@@ -223,7 +221,7 @@ hamclass <- function(train, predict, save.csv=FALSE, seed=12345) {
   training <- cbind(train.ori, train.sqx, train.newterms, train[,62])
   testing <- cbind(test.ori, test.sqx, test.newterms)
   
-  colnames(training)[col(training)] <- "popularity"
+  colnames(training)[ncol(training)] <- "popularity"
   
   # converting it into h2o object
   train.hex   <- as.h2o( training, destination_frame="train.hex" )
@@ -238,10 +236,6 @@ hamclass <- function(train, predict, save.csv=FALSE, seed=12345) {
                                      ntrees=350, max_depth=5, min_rows= 14, learn_rate=0.025, 
                                      distribution="multinomial")
   
-  ## out of bag error
-  #nclasses    <- length( unique(train[,k+1]) )
-  #oob_error   <- RF@model$training_metrics@metrics$cm$table[ nclasses + 1, nclasses + 1]
-  
   ## predict
   results                 <- h2o.predict( GBM, newdata = test.hex )
   prediction              <- data.frame( id=predict[,1] )
@@ -251,5 +245,5 @@ hamclass <- function(train, predict, save.csv=FALSE, seed=12345) {
   if ( save.csv==TRUE )   write.csv( prediction, "prediction.csv", row.names=FALSE )
   
   ## output
-  list <- list( prediction=prediction, oob_error=oob_error )
+  return(prediction)
 }
