@@ -1,0 +1,15 @@
+---
+title: "Untitled"
+author: "Anneke Speijers"
+date: "15 March 2016"
+output: pdf_document
+---
+
+
+
+```{r, echo=FALSE, null_prefix=TRUE, comment=NA}
+aaa <- read.csv("interaction_names.csv")
+aaa
+```
+
+

@@ -9,7 +9,7 @@ install.packages("h2o", repos=(c("http://s3.amazonaws.com/h2o-release/h2o/master
 library(h2o)
 h2o.init(nthreads = -1)
 
-### using all transformed features (not XGBoost regression fitted values)
+############# using all transformed features (not XGBoost regression fitted values)
 # import data
 path1 <- "Transformed_Train.csv"
 path2 <- "Transformed_Test.csv"
@@ -30,7 +30,7 @@ RF1 <- h2o.randomForest(y=388, x=1:387, training_frame=training.hex,
 # performance
 performance <- h2o.performance(RF1, data=training.hex, valid=TRUE)
 
-### Using original features
+############### Using original features
 
 setwd("~/Desktop/BGSE/AdvancedCompMethods/Project/predicting-online-news-popularity/Data/")
 
@@ -54,7 +54,7 @@ RF2 <- h2o.randomForest(y=62, x=3:61, training_frame=training1.hex,
                         nfolds=5)
 
 # performance
-performance <- h2o.performance(RF2, data=training1.hex, valid=TRUE)
+performance1 <- h2o.performance(RF2, data=training1.hex, valid=TRUE)
 
 
 
