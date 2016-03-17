@@ -1,0 +1,1 @@
+Documents for setting up h2o on R and implementing GLM and GBM models. 
