@@ -1,15 +1,12 @@
-# Use ANOVA to pick a reasonable subset of interaction terms to include in models.
-setwd("~/Desktop/BGSE/AdvancedCompMethods/Project/predicting-online-news-popularity/Data")
+
 
 contInt <- function(train, test) {
-    # read in training data
-    train       <- read.csv("../data/news_popularity_training.csv", header = TRUE)
+    
     train       <- train[,3:62]
     X_train     <- train[,1:59]
     Y_train     <- factor(train[,60])
 
-    # read in test data
-    test        <- read.csv("../data/news_popularity_test.csv", header = TRUE)
+    
     test        <- test[,3:61]
     X_test      <- test
 
@@ -63,7 +60,22 @@ contInt <- function(train, test) {
         }     
     }        
 
-    
+    list(train=interactions_train, test=interactions_test)
+}
+
+
+
+# Use ANOVA to pick a reasonable subset of interaction terms to include in models.
+setwd("~/Desktop/BGSE/AdvancedCompMethods/Project/predicting-online-news-popularity/Data")
+
+# read in training data
+train       <- read.csv("../data/news_popularity_training.csv", header = TRUE)
+
+# read in test data
+test        <- read.csv("../data/news_popularity_test.csv", header = TRUE)
+
+output <- contInt(train, test)
+
 write.csv(interactions_train, file = "../data/XX_anov_train3.csv", row.names=FALSE)
 write.csv(interactions_test, file = "../data/XX_anov_test3.csv", row.names=FALSE)
 
