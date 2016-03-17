@@ -14,19 +14,19 @@ The objective of this competition was to build a model that could predict the po
 
 One of the most notable features of the dataset was the substantial class imbalance. The percentage of each class in the training set was as follows:
 
-	Popularity level 1 -  31.59%
-	Popularity level 2 -  45.88%
-	Popularity level 3 -  19.04%
-	Popularity level 4 -  3.33%
-	Popularity level 1 -  0.157%
+Popularity level 1 -  31.59%  
+Popularity level 2 -  45.88%  
+Popularity level 3 -  19.04%  
+Popularity level 4 -  3.33%  
+Popularity level 1 -  0.157%
 
 This posed a significant challenge, since all classification models built on this dataset were biased towards predicting classes 1 and 2 (and to some extent 3), whilst being unable to accurately predict classes 4 and 5.
 
 There were 59 features in total, out of which 34 were continuous. There were two groups of categorical variables: 
 
-1) a binary set used to denote which data channel the article was publisehd on; Lifestyle, Entertainment, Business, Social Media, Technology or World. In the training set there were 4,658 articles not designated to any data channel and in the test set there are 1476. 
+1) A binary set used to denote which data channel the article was published on: Lifestyle, Entertainment, Business, Social Media, Technology or World. In the training set there were 4,658 articles not designated to any data channel and in the test set there are 1476. 
 
-2) another binary set used to denote the day of the week on which the article was released, plus an extra variable for whether or not it was released on a weekend.  
+2) Another binary set used to denote the day of the week on which the article was released, plus an extra variable for whether or not it was released on a weekend.  
 
 The continous variables can be grouped the following way:
 
@@ -44,7 +44,7 @@ In this report, when the term "Original Features" is used, it refers to the abov
 
 # A baseline model - multinomial logistic regression
 
-One of the simplist ways to approach a multiclass classification problem is to apply multinomial logistic rgression. We did this by implementing the "multinom" function from the "nnet" package. Doing so, on the original features matrix, on a training sample of 70% of the entire training sample, gave us a baseline accuracy of 0.4823, on the remaining 30% validation set. Our goal from this point onwards was to develop a model that could outperform this.
+One of the simplest ways to approach a multiclass classification problem is to apply multinomial logistic rgression. We did this by implementing the "multinom" function from the "nnet" package. Doing so, on the original features matrix, on a training sample of 70% of the entire training sample, gave us a baseline accuracy of 0.4823, on the remaining 30% validation set. Our goal from this point onwards was to develop a model that could outperform this.
 
  
 
@@ -68,7 +68,7 @@ We carried out the following feature transformations (continuous variables only)
 
 ###The categorical variables:
 
-Intuitively, it made sense to us that the data channel on which an article was published should make an impact on its popularity. For example, one might expect an article published on a social media channel to have more chance of becoming viral than one that is published on a business channel. The same can be said for the day of the week on which an article is released. It is not unreasonable to suggest that people have more time to read on the weekends and thus an article published on a Sunday maybe more likely to go viral than one published on say a Tuesday. The training data in fact showed that, despite the fact that less articles were published on a Sunday, the percentage of high popularity articles was higher than other days. 
+Intuitively, it made sense to us that the data channel on which an article was published should make an impact on its popularity. For example, one might expect an article published on a social media channel to have more chance of becoming viral than one that is published on a business channel. The same can be said for the day of the week on which an article is released. It is not unreasonable to suggest that people have more time to read on the weekends and thus an article published on a Sunday maybe more likely to go viral than one published on say, a Tuesday. The training data in fact showed that, despite the fact that less articles were published on a Sunday, the percentage of high popularity articles was higher than other days. 
 
 We tried to capture this by mapping all the data channel binary variables to two categorical variables. We did the same for the day of the week binary variables. For each data channel (day of the week) binary variable, we divided the number of articles belonging to each popularity class in the training set by the total number of articles released on that data channel. We then multiplied these proportions with increasing weights. For example, for the lifestyle binary variable, we multiplied the proportion of articles in popularity class 1 by 1, the proportion of articles in popularity class 2 by 2, etc. These values are then summed up for each data channel. From these totals, we generate 2 new features:
 
@@ -78,11 +78,11 @@ We tried to capture this by mapping all the data channel binary variables to two
 Any article that does not belong to any of the data channels is given a 0.
 For the days of the week binary variables, the process is the same except that the values for the first feature range from 1 to 7. 
 
-The idea behind these new features is that the first one somehow captures the magnitude of popularity an article reveives by being published on a particular data channel or day of the week, whereas the second one captures whether the publication channel or day of the week is likely to positively or negatively affect the populariyt of an article. 
+The idea behind these new features is that the first one somehow captures the magnitude of popularity an article receives by being published on a particular data channel or day of the week, whereas the second one captures whether the publication channel or day of the week is likely to positively or negatively affect the popularity of an article. 
 
 ###Continuous variable interaction terms: 
 
-We also considered first order interaction terms between the continuous features. With 34 continuous features in the original dataset, the set of all possible first order interactions terms was very large. In order to select a reasonable subset of these, we looked for terms that discriminated well between classes. 
+We also considered first order interaction terms between the continuous features. With 34 continuous numeric features in the original dataset, the set of all possible first order interactions terms was very large. In order to select a reasonable subset of these, we looked for terms that discriminated well between classes. 
 
 For each potential interaction term we carried out analysis of variance (ANOVA) to determine whether the means of each of the five classes, for that particular interaction term, varied significantly. We used a Tukey test with a significance level of 5% and only accepted the interaction term as a new feature if the null hypothesis (where the null is that two means are the same) was rejected for all combinations between the classes. That is, if the means were statistically significantly different between classes 1-2, 1-3, 1-4, 1-5, 2-3, 2-4, 2-5, 3-4, 3-5 and 4-5, we accepted the new feature. This process yielded 33 new features.
 
@@ -107,9 +107,9 @@ A note on why we decided to use xGboost for this section. It provided us with ma
 
 # Feature Selection
 
-After creating a large number of new features, we were faced with the task of selecting which ones we wanted to use for our classification problem. We did this by extracting the variable importance measures produced from gradient boosting classification models. We used the and h2o.varimp() function within the h2o package, using as input an h2o.gbm model. This returns the features ranked in descending order of importance. We also tried using the xgb.importance() function within the xGboost package which takes as input a xgb.train model. We found the latter method to be much more time intensive.
+After creating a large number of new features, we were faced with the task of selecting which ones we wanted to use for our classification problem. We did this by extracting the variable importance measures produced from gradient boosting classification models. We used the h2o.varimp() function within the h2o package, using as input an h2o.gbm model. This returns the features ranked in descending order of importance. We also tried using the xgb.importance() function within the xGboost package which takes as input a xgb.train model. We found the latter method to be much more time intensive.
 
-We started with all original, transformed and extracted variables described above, giving us a total of 388 features. We then trialled two differnt methods in order to cut this down.
+We started with all original, transformed and extracted variables described above, giving us a total of 388 features. We then trialled two different methods in order to cut this down.
 
 ##1) Variable importance using an h2o.gbm model
 
@@ -154,13 +154,14 @@ The parameters that were tuned in the gbm function were max.depth, sampsize, lam
 Note. Although we used xGboost as part of the feature selection process but we didn't use it for any of our submissions. The main reason behind this is that parameter tuning is quite difficult in comparison to the h2o implementation. Results can be unstable and we found it quite difficult to pick up trends between parameter values and prediction accuracy. It is extremely popular for it's prediction capabilities but we ended up with better results from h2o.gbm in comparison to xGboost. 
 
 
-##h2o.DeepLearning
-We tried implementing a deep learning model using the function h20.DeepLearning from the h2o package. The matrix used was the Final 49 features matrix. The parameters tuned were the following:
+##h2o.deeplearning
+We tried implementing a deep learning model using the function h2o.deeplearning from the h2o package. The matrix used was the Final 49 features matrix. The parameters tuned were the following:
 
  1) The number of layers of weights 
  2) The number of weights in each layer (constant or decreasing with progression layers from input to output)
- 3) With and without "Dropout"
- 4) The evaluation metric: "mlogloss" and "misclassification" 
+ 3) activation
+ 4) loss
+ 5) stopping_metric
 
 The best accuracy we achieved with the tuning of parameters was 0.502.  
 We decided not to use this model because deep learning requires a vast amount of data and generally works better for less structured datasets. The complexity of tuning the number of weights and layers was another disadvantage with this approach.
@@ -175,14 +176,15 @@ In order to try to capture the ordinality of the popularity classes we trialled 
 
 Each of these problems was modelled using the randomForest function from the package of the same name. 
 
-For prediction, the posterior probabilities of being in a particular popularity class are as follows:
-P(class 1) = Probability of being a 0 in Model 1
-P(class 2) = Probability of being a 1 in Model 1 - Probability of being a 1 in Model 2
-P(class 3) = Probability of being a 1 in Model 2 - Probability of being a 1 in Model 3
-P(class 4) = Probability of being a 1 in Model 3 - Probability of being a 1 in Model 4
+For prediction, the posterior probabilities of being in a particular popularity class are as follows: 
+
+P(class 1) = Probability of being a 0 in Model 1  
+P(class 2) = Probability of being a 1 in Model 1 - Probability of being a 1 in Model 2  
+P(class 3) = Probability of being a 1 in Model 2 - Probability of being a 1 in Model 3  
+P(class 4) = Probability of being a 1 in Model 3 - Probability of being a 1 in Model 4  
 P(class 5) = Probability of being a 1 in Model 4
 
-This model was only run using the original features matrix and performed very badly. Thus is was discarded. 
+This model was only run using the original features matrix and performed very badly. Thus it was discarded. 
 
 # Final Selected Model
 
