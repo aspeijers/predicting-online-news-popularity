@@ -2,15 +2,14 @@
 # ----------------------------------------------------------------------
 # H2o Implementation of GBM for Multiclass Output
 # ----------------------------------------------------------------------
-#' Random Forest Classifier
+#' GBM Classifier
 #' 
-#' Classify the input with a random forest classifier.
+#' Classify the input with a GBM classifier.
 #'
 #' @param train A data frame or a matrix where rows are observations and columns are features and the label. The label is the final column.
 #' @param predict A data frame or a matrix where rows are observations and columns are features. 
 #' @param save.csv A TRUE or FALSE variable defining whether a .csv file with the id and predicted labels is to be saved or not. File will be saved to current working directory. 
-#' @param seed A seed to use to enable reproducibility of output. 
-#' @return A list with the following elements: data frame with id and predicted popularity class.  
+#' @return A data frame with id and predicted popularity class.  
 #' @export
 #' @import assertthat 
 #' @import h2o
@@ -21,8 +20,7 @@
 #' classesTrain <- c(rep(0, 50), rep(1, 50))
 #' # get the hamclass predictions for the predict set and save them in a .csv file in the current working directory
 #' classes  <- hamclass(inputsTrain, inputsPredict, save.csv=TRUE)
-#' classes$prediction
-#' # get the hamclass out of bag error for the training set
+#' # classes is a data frame with ID and Popularity columns
 
 hamclass <- function(train, predict, save.csv=FALSE) {
     

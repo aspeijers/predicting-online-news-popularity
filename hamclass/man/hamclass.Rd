@@ -2,9 +2,9 @@
 % Please edit documentation in R/hamclass.R
 \name{hamclass}
 \alias{hamclass}
-\title{Random Forest Classifier}
+\title{GBM Classifier}
 \usage{
-hamclass(train, predict, save.csv = FALSE, seed = 12345)
+hamclass(train, predict, save.csv = FALSE)
 }
 \arguments{
 \item{train}{A data frame or a matrix where rows are observations and columns are features and the label. The label is the final column.}
@@ -12,14 +12,12 @@ hamclass(train, predict, save.csv = FALSE, seed = 12345)
 \item{predict}{A data frame or a matrix where rows are observations and columns are features.}
 
 \item{save.csv}{A TRUE or FALSE variable defining whether a .csv file with the id and predicted labels is to be saved or not. File will be saved to current working directory.}
-
-\item{seed}{A seed to use to enable reproducibility of output.}
 }
 \value{
-A list with the following elements: data frame with id and predicted popularity class, out of bag error.
+A data frame with id and predicted popularity class.
 }
 \description{
-Classify the input with a random forest classifier.
+Classify the input with a GBM classifier.
 }
 \examples{
 # create artificial dataset
@@ -28,8 +26,6 @@ inputsPredict  <- matrix(rnorm(200), ncol=2)
 classesTrain <- c(rep(0, 50), rep(1, 50))
 # get the hamclass predictions for the predict set and save them in a .csv file in the current working directory
 classes  <- hamclass(inputsTrain, inputsPredict, save.csv=TRUE)
-classes$prediction
-# get the hamclass out of bag error for the training set
-classes$oob_error
+# classes is a data frame with ID and Popularity columns
 }
 

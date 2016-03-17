@@ -2,10 +2,10 @@ Package: hamclass
 Type: Package
 Version: 1.0
 Date: 2016-02-12
-Title: Classification using the h2o implementation of random forest.
+Title: Classification using the h2o implementation of GBM.
 Author: Harihara Subramanyam Sreenivasan and Max Elias van Esso and Anneke
     Speijers
 Maintainer: Anneke Speijers <anneke.speijers@barcelonagse.eu>
-Description: Library which takes training and out-of-sample data and returns predicted values for the out-of-sample data, which are calculated using the h2o implementation of random forest.
+Description: Library which takes training and out-of-sample data and returns predicted values for the out-of-sample data, which are calculated using the h2o implementation of GBM.
 License: see LICENSE
 RoxygenNote: 5.0.1
