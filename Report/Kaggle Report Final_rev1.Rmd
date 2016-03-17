@@ -1,6 +1,8 @@
 ---
 title: "Predicting Online News Popularity Competition Report"
 author: "Anneke Speijers, Harihara Subramanyam Sreenivasan, Max Elias van Esso"
+header-includes:
+   - \usepackage{graphicx}
 output: pdf_document
 ---
 # Objective
@@ -93,7 +95,12 @@ An important feature of the dataset in this competition was that the popularity 
 3) The output from this process was 1080 sets of fitted numeric values for the training data ranging from 1.09 to 4.92. 
 4) With these 1080 new features, we ran the h2o implementation of random forest, using the true popularity classes as the target labels, and extracted the top eight most important variables using the "h2o.varimp()" function. We chose eight, since variable importance reached a plateau at this point, as can be seen in the graph below. 
 
-\includegraphics{varimp.png}
+```{r fig.width=5, fig.height=5,echo=FALSE, fig.align='center'}
+library(png)
+library(grid)
+img <- readPNG("varimp.png")
+ grid.raster(img)
+```
 
 A note on why we decided to use xGboost for this section. It provided us with many parameters to tune and also had a lower Root Mean Squared Error (RMSE) in comparison to other models at initial testing stage. 
 
