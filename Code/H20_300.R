@@ -180,9 +180,9 @@ colnames(pred50) <- c("id", "popularity")
 write.csv(pred50, "submission50tunedparams.csv")
 
 
-################################################
-# 51 features with GBM optimum parameters ######
-################################################
+#################################################
+# Original features with GBM optimum parameters #
+#################################################
 
 xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/training70.csv", header = TRUE)
 xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/test30.csv", header = TRUE)
@@ -197,8 +197,8 @@ Complete60_gbm_tr[,60] <- as.factor(Complete60_gbm_tr[,60])
 Complete60_gbm_te[,60] <- as.factor(Complete60_gbm_te[,60])
 
 ### GBM
-training60.gbm <- h2o.gbm(y=60, x=1:59, training_frame = Complete60_gbm_tr, ntrees=675,
-                          max_depth=7, min_rows= 12, learn_rate=0.02,
+training60.gbm <- h2o.gbm(y=60, x=1:59, training_frame = Complete60_gbm_tr, ntrees=690,
+                          max_depth=3, min_rows= 12, learn_rate=0.026,
                           distribution="multinomial")
 
 # Storing the predictions
@@ -218,9 +218,9 @@ plot(final_selection[,2])
 sum(final_selection[,2] > mean(final_selection[,2]))
 
 
-###############################################################
-# Original features with GBM optimum parameters for submission ######
-###############################################################
+################################################################
+# Original features with GBM optimum parameters for submission #
+################################################################
 
 xgboost_train <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/news_popularity_training.csv", header = TRUE)
 xgboost_test <- read.csv("/home/max/Escritorio/Data Science/2nd term/Adv. Computational Methods/predicting-online-news-popularity/Data/news_popularity_test.csv", header = TRUE)
@@ -236,8 +236,8 @@ Complete60_gbm_tr[,60] <- as.factor(Complete60_gbm_tr[,60])
 
 
 ### GBM
-training60.gbm <- h2o.gbm(y=60, x=1:59, training_frame = Complete60_gbm_tr, ntrees=707,
-                          max_depth=5, min_rows= 10, learn_rate=0.015,
+training60.gbm <- h2o.gbm(y=60, x=1:59, training_frame = Complete60_gbm_tr, ntrees=690,
+                          max_depth=3, min_rows= 12, learn_rate=0.026,
                           distribution="multinomial")
 
 # Storing the predictions
@@ -248,7 +248,7 @@ pred60 <- cbind(test[,1], pred60$predict)
 
 colnames(pred60) <- c("id", "popularity")
 
-write.csv(pred60, "submissionoriginaltunedparams.csv")
+write.csv(pred60, "submissionoriginaltunedparams1.csv")
 
 
 
